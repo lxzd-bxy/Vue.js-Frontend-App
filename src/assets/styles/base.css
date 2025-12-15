@@ -1,0 +1,10 @@
+:root {
+  --container-size: 1840px;
+
+  --font-size: 20px;
+  --font-color-light: #fff;
+  --font-color-dark: #1f1f1f;
+
+  --bg-color-dark: #1f1f1f;
+  --bg-color-grey: #aeafb1;
+}

@@ -1,0 +1,13 @@
+@import './base';
+
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  font-size: var(--font-size);
+}
+
+a {
+  color: var(--font-color-dark);
+  text-decoration: none;
+}
