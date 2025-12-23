@@ -9,10 +9,10 @@
   </div>
 
   <div class="container-image-bar">
-    <div class="image-bar-left">
-    </div>
-    <div class="image-bar-right">
-    </div>
+    <router-link to="/catalog" class="image-bar-left">
+    </router-link>
+    <router-link to="/catalog" class="image-bar-right">
+    </router-link>
   </div>
 
   <div class="gadget-scroll-bar">
