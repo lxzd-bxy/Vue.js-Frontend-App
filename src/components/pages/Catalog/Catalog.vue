@@ -39,7 +39,7 @@
     <div class="header">
       <input class="search" placeholder="поиск..." type="search" />
       <ul class="tag-buttons">
-        <li class="tag-button">Новые</li>
+        <li class="tag-button text-blue-600">Новые</li>
         <li class="tag-button">Старые</li>
         <li class="tag-button">Все</li>
       </ul>
@@ -48,7 +48,9 @@
     <div class="cards-content">
       <div v-for="card in cards" :key="card.id" class="card">
         <h1 class="card-title">{{ card.title }}</h1>
-        <img class="card-image" src="#" />
+        <hr>
+        <img class="card-image" :src="card.content" />
+        <hr>
         <p class="card-description">{{ card.description }}</p>
       </div>
     </div>
@@ -56,18 +58,20 @@
 </template>
 
 <style scoped>
-  .card-title {
-    margin-bottom: 1rem;
-  }
-
   .card-image {
     width: 100%;
-    height: 200px;
+    height: 250px;
     border-radius: 1rem;
+    object-fit: cover;
+  }
+
+  hr {
+    margin: 0.5rem 0;
+    border: 1px solid grey;
   }
 
   .card-description {
-    margin-top: 1rem;
+    font-size: 0.75rem;
   }
 
   li {
