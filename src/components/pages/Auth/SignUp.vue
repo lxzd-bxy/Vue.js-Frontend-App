@@ -1,3 +1,70 @@
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '../../../stores/authStore'
+import { validateEmail } from '../../../utils/validators/validateEmail'
+import { validatePassword } from '../../../utils/validators/validatePassword'
+import { validateConfirmPassword } from '../../../utils/validators/validateConfirmPassword'
+
+const authStore = useAuthStore()
+
+const email = ref('')
+const password = ref('')
+const confirmPassword = ref('')
+const loading = ref(false)
+const formError = ref('')
+const nameError = ref('')
+const emailError = ref('')
+const passwordError = ref('')
+const confirmPasswordError = ref('')
+
+const router = useRouter()
+
+const isFormValid = computed(() => {
+  return !validateEmail(email.value) && !validatePassword(password.value) && !validateConfirmPassword(password.value, confirmPassword.value)
+})
+
+const clearFieldError = (field: 'name' | 'email' | 'password' | 'confirmPassword') => {
+  if (field === 'name') nameError.value = ''
+  else if (field === 'email') emailError.value = ''
+  else if (field === 'password') passwordError.value = ''
+  else confirmPasswordError.value = ''
+}
+
+const handleSubmit = async () => {
+  emailError.value = validateEmail(email.value)
+  passwordError.value = validatePassword(password.value)
+  confirmPasswordError.value = validateConfirmPassword(password.value, confirmPassword.value)
+
+  if (nameError.value || emailError.value || passwordError.value || confirmPasswordError.value) {
+    formError.value = 'Please fix the errors above'
+    return
+  }
+
+  loading.value = true
+  formError.value = ''
+
+  try {
+    await authStore.register({
+      email: email.value.trim(),
+      password: password.value,
+    })
+
+    router.replace('/').catch(err => {
+      console.error('Router replace error:', err)
+    })
+  } catch (error) {
+    if (error instanceof Error) {
+      formError.value = error.message || 'An unexpected error occurred'
+    } else {
+      formError.value = 'An unexpected error occurred'
+    }
+  } finally {
+    loading.value = false
+  }
+}
+</script>
+
 <template>
   <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -58,84 +125,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { register } from '../../../services/authService'
-
-const email = ref('')
-const password = ref('')
-const confirmPassword = ref('')
-const loading = ref(false)
-const formError = ref('')
-const nameError = ref('')
-const emailError = ref('')
-const passwordError = ref('')
-const confirmPasswordError = ref('')
-
-const router = useRouter()
-
-const validateEmail = (value: string): string => {
-  if (!value) return 'Email is required'
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!emailRegex.test(value)) return 'Please enter a valid email address'
-  return ''
-}
-
-const validatePassword = (value: string): string => {
-  if (!value) return 'Password is required'
-  if (value.length < 6) return 'Password must be at least 6 characters'
-  return ''
-}
-
-const validateConfirmPassword = (value: string): string => {
-  if (!value) return 'Please confirm your password'
-  if (value !== password.value) return 'Passwords do not match'
-  return ''
-}
-
-const isFormValid = computed(() => {
-  return !validateEmail(email.value) && !validatePassword(password.value) && !validateConfirmPassword(confirmPassword.value)
-})
-
-const clearFieldError = (field: 'name' | 'email' | 'password' | 'confirmPassword') => {
-  if (field === 'name') nameError.value = ''
-  else if (field === 'email') emailError.value = ''
-  else if (field === 'password') passwordError.value = ''
-  else confirmPasswordError.value = ''
-}
-
-const handleSubmit = async () => {
-  emailError.value = validateEmail(email.value)
-  passwordError.value = validatePassword(password.value)
-  confirmPasswordError.value = validateConfirmPassword(confirmPassword.value)
-
-  if (nameError.value || emailError.value || passwordError.value || confirmPasswordError.value) {
-    formError.value = 'Please fix the errors above'
-    return
-  }
-
-  loading.value = true
-  formError.value = ''
-
-  try {
-    await register({
-      email: email.value.trim(),
-      password: password.value,
-    })
-
-    router.replace('/').catch(err => {
-      console.error('Router replace error:', err)
-    })
-  } catch (error) {
-    if (error instanceof Error) {
-      formError.value = error.message || 'An unexpected error occurred'
-    } else {
-      formError.value = 'An unexpected error occurred'
-    }
-  } finally {
-    loading.value = false
-  }
-}
-</script>

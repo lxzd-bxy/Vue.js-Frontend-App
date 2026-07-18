@@ -2,7 +2,10 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../../stores/authStore'
-import { AuthError } from '../../../services/authService'
+import { AuthError } from '../../../api/errors/AuthError'
+import { validateEmail } from '../../../utils/validators/validateEmail'
+import { validatePassword } from '../../../utils/validators/validatePassword'
+const authStore = useAuthStore()
 
 const email = ref('')
 const password = ref('')
@@ -12,20 +15,6 @@ const emailError = ref('')
 const passwordError = ref('')
 
 const router = useRouter()
-const authStore = useAuthStore()
-
-const validateEmail = (value: string): string => {
-  if (!value) return 'Email is required'
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!emailRegex.test(value)) return 'Please enter a valid email address'
-  return ''
-}
-
-const validatePassword = (value: string): string => {
-  if (!value) return 'Password is required'
-  if (value.length < 6) return 'Password must be at least 6 characters'
-  return ''
-}
 
 const isFormValid = computed(() => {
   return !validateEmail(email.value) && !validatePassword(password.value)
@@ -37,6 +26,7 @@ const clearFieldError = (field: 'email' | 'password') => {
 }
 
 const handleSubmit = async () => {
+  console.log('🟢 handleSubmit called')
   emailError.value = validateEmail(email.value)
   passwordError.value = validatePassword(password.value)
 
@@ -54,7 +44,13 @@ const handleSubmit = async () => {
       password: password.value,
     })
 
-    await router.replace('/')
+    console.log('Login successful, isAuthenticated:', authStore.isAuthenticated)
+    console.log('User:', authStore.user)
+    console.log('Token:', authStore.token)
+
+    router.replace('/').catch(err => {
+      console.error('Router replace error:', err)
+    })
   } catch (error) {
     if (error instanceof AuthError) {
       formError.value = error.message
@@ -95,7 +91,7 @@ const goToForgotPassword = () => {
             <input id="email" v-model="email" type="email" name="email" autocomplete="email" required
               :disabled="loading"
               class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-              :class="{ 'border-red-500': emailError }" @input="clearFieldError('email')" />
+              :class="{ 'outline-red-500': emailError }" @input="clearFieldError('email')" />
           </div>
           <p v-if="emailError" class="mt-1 text-sm text-red-400">{{ emailError }}</p>
         </div>
@@ -116,7 +112,7 @@ const goToForgotPassword = () => {
             <input id="password" v-model="password" type="password" name="password" autocomplete="current-password"
               required :disabled="loading"
               class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-              :class="{ 'border-red-500': passwordError }" @input="clearFieldError('password')" />
+              :class="{ 'outline-red-500': passwordError }" @input="clearFieldError('password')" />
           </div>
           <p v-if="passwordError" class="mt-1 text-sm text-red-400">{{ passwordError }}</p>
         </div>

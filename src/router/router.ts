@@ -18,12 +18,15 @@ const router = createRouter({
 router.beforeEach((to, _from) => {
   const authStore = useAuthStore()
   const isAuthenticated = authStore.isAuthenticated
+  console.log('Navigating to:', to.path, 'isAuthenticated:', isAuthenticated)
 
   if (to.meta.requiresAuth && !isAuthenticated) {
+    console.log('Redirect to /login')
     return '/login'
   }
 
   if (to.meta.guest && isAuthenticated) {
+    console.log('Redirect to /')
     return '/'
   }
 })
