@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import SignIn from '../components/pages/Auth/SignIn.vue'
-import SignUp from '../components/pages/Auth/SignUp.vue'
-import Dashboard from '../components/pages/Dashboard/Dashboard.vue'
+import SignIn from '../components/pages/auth/SignIn.vue'
+import SignUp from '../components/pages/auth/SignUp.vue'
+import Dashboard from '../components/pages/dashboard/Dashboard.vue'
 import { useAuthStore } from '../stores/authStore.ts'
 
 const routes = [
@@ -21,12 +21,10 @@ router.beforeEach((to, _from) => {
   console.log('Navigating to:', to.path, 'isAuthenticated:', isAuthenticated)
 
   if (to.meta.requiresAuth && !isAuthenticated) {
-    console.log('Redirect to /login')
     return '/login'
   }
 
   if (to.meta.guest && isAuthenticated) {
-    console.log('Redirect to /')
     return '/'
   }
 })

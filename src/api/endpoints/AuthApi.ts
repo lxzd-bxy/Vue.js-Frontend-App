@@ -1,7 +1,7 @@
-import { HttpClient } from '../client/HttpClient'
-import type { LoginCredentials } from '../../models/LoginCredentials'
-import type { RegisterCredentials } from '../../models/RegisterCredentials'
-import type { LoginResponse } from '../../models/LoginResponse'
+import { HttpClient } from '../client/httpClient'
+import type { LoginCredentials } from '../../models/loginCredentials'
+import type { RegisterCredentials } from '../../models/registerCredentials'
+import type { LoginResponse } from '../../models/loginResponse'
 
 export class AuthApi {
     private httpClient: HttpClient

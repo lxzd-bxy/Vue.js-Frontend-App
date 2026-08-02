@@ -1,11 +1,11 @@
-import { AuthApi } from '../api/endpoints/AuthApi'
-import { ValidationError } from '../api/errors/ValidationError'
-import { AuthError } from '../api/errors/AuthError'
-import { NetworkError } from '../api/errors/NetworkError'
+import { AuthApi } from '../api/endpoints/authApi'
+import { ValidationError } from '../api/errors/validationError'
+import { AuthError } from '../api/errors/authError'
+import { NetworkError } from '../api/errors/networkError'
 
-import type { LoginCredentials } from '../models/LoginCredentials'
-import type { RegisterCredentials } from '../models/RegisterCredentials'
-import type { LoginResponse } from '../models/LoginResponse'
+import type { LoginCredentials } from '../models/loginCredentials'
+import type { RegisterCredentials } from '../models/registerCredentials'
+import type { LoginResponse } from '../models/loginResponse'
 
 export class AuthService {
   private authApi: AuthApi

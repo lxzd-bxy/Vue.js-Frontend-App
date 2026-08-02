@@ -1,4 +1,4 @@
-import { AuthError } from "./AuthError"
+import { AuthError } from "./authError"
 export class NetworkError extends AuthError {
     constructor(message: string) {
         super(message, 0)

@@ -1,19 +1,19 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { authService } from '../api/di/containers'
-import { AuthError } from '../api/errors/AuthError'
+import { authService } from '../api/dependency-injection/containers'
+import { AuthError } from '../api/errors/authError'
 
-import type { LoginCredentials } from '../models/LoginCredentials'
-import type { RegisterCredentials } from '../models/RegisterCredentials'
-import type { LoginResponse } from '../models/LoginResponse'
+import type { LoginCredentials } from '../models/loginCredentials'
+import type { RegisterCredentials } from '../models/registerCredentials'
+import type { LoginResponse } from '../models/loginResponse'
 
 export const useAuthStore = defineStore('auth', () => {
     const user = ref<LoginResponse['user'] | null>(null)
-    const token = ref<string | null>(null)
+    const accessToken = ref<string | null>(null)
     const isLoading = ref(false)
     const error = ref<string | null>(null)
 
-    const isAuthenticated = computed(() => user.value !== null || token.value !== null)
+    const isAuthenticated = computed(() => user.value !== null || accessToken.value !== null)
 
     async function fetchUser() {
         isLoading.value = true
@@ -21,12 +21,11 @@ export const useAuthStore = defineStore('auth', () => {
         try {
             const data = await authService.getCurrentUser()
             user.value = data.user || null
-            token.value = data.token || null
+            accessToken.value = data.accessToken || null
         } catch (err) {
             user.value = null
-            token.value = null
+            accessToken.value = null
             if (err instanceof AuthError && err.status === 401) {
-                // просто сбрасываем, не показываем ошибку
             } else {
                 error.value = (err as Error).message
             }
@@ -40,12 +39,11 @@ export const useAuthStore = defineStore('auth', () => {
         error.value = null
         try {
             const response = await authService.login(credentials)
-            // Сервис уже вернул готовый объект с user и token
-            token.value = response.token ?? null
+            accessToken.value = response.accessToken ?? null
             user.value = response.user ?? null
         } catch (err) {
             user.value = null
-            token.value = null
+            accessToken.value = null
             if (err instanceof AuthError) {
                 error.value = err.message
             } else {
@@ -62,11 +60,11 @@ export const useAuthStore = defineStore('auth', () => {
         error.value = null
         try {
             const response = await authService.register(credentials)
-            token.value = response.token ?? null
+            accessToken.value = response.accessToken ?? null
             user.value = response.user ?? null
         } catch (err) {
             user.value = null
-            token.value = null
+            accessToken.value = null
             if (err instanceof AuthError) {
                 error.value = err.message
             } else {
@@ -86,21 +84,21 @@ export const useAuthStore = defineStore('auth', () => {
             console.warn('Logout API error:', err)
         } finally {
             user.value = null
-            token.value = null
+            accessToken.value = null
             isLoading.value = false
         }
     }
 
     function reset() {
         user.value = null
-        token.value = null
+        accessToken.value = null
         isLoading.value = false
         error.value = null
     }
 
     return {
         user,
-        token,
+        accessToken,
         isLoading,
         error,
         isAuthenticated,

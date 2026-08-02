@@ -1,5 +1,5 @@
-import { HttpClient } from '../client/HttpClient'
-import { AuthApi } from '../endpoints/AuthApi'
+import { HttpClient } from '../client/httpClient'
+import { AuthApi } from '../endpoints/authApi'
 import { AuthService } from '../../services/authService'
 
 const httpClient = new HttpClient({

@@ -1,7 +1,7 @@
-import { AuthError } from '../errors/AuthError'
-import { NetworkError } from '../errors/NetworkError'
-import type { HttpClientConfig } from './interfaces/HttpClientConfig'
-import type { HttpRequestOptions } from './interfaces/HttpRequestOptions'
+import { AuthError } from '../errors/authError'
+import { NetworkError } from '../errors/networkError'
+import type { HttpClientConfig } from './interfaces/httpClientConfig'
+import type { HttpRequestOptions } from './interfaces/httpRequestOptions'
 
 export class HttpClient {
     private config: HttpClientConfig

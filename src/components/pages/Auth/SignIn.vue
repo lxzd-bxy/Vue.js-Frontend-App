@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../../stores/authStore'
-import { AuthError } from '../../../api/errors/AuthError'
+import { AuthError } from '../../../api/errors/authError'
 import { validateEmail } from '../../../utils/validators/validateEmail'
 import { validatePassword } from '../../../utils/validators/validatePassword'
 const authStore = useAuthStore()
@@ -26,7 +26,6 @@ const clearFieldError = (field: 'email' | 'password') => {
 }
 
 const handleSubmit = async () => {
-  console.log('🟢 handleSubmit called')
   emailError.value = validateEmail(email.value)
   passwordError.value = validatePassword(password.value)
 
@@ -43,10 +42,6 @@ const handleSubmit = async () => {
       email: email.value,
       password: password.value,
     })
-
-    console.log('Login successful, isAuthenticated:', authStore.isAuthenticated)
-    console.log('User:', authStore.user)
-    console.log('Token:', authStore.token)
 
     router.replace('/').catch(err => {
       console.error('Router replace error:', err)
