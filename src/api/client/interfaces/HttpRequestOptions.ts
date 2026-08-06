@@ -1,1 +1,1 @@
-export interface HttpRequestOptions extends RequestInit { }
+export interface HttpRequestOptions extends RequestInit {}

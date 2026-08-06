@@ -1,4 +1,4 @@
 export interface HttpClientConfig {
-    baseUrls: string[]
-    fallbackUrls?: string[]
+  baseUrls: string[];
+  fallbackUrls?: string[];
 }
